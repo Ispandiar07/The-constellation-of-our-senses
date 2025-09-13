@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Созвездие наших чувств</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: #0a0e29;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff7ae5, #7a88ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #b5b7ff;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 16px;
+        }
+        
+        .nav-links a:hover {
+            color: #ff7ae5;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 80px 0 50px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff7ae5, #7a88ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #b5b7ff;
+            line-height: 1.6;
+        }
+        
+        .timer {
+            background: rgba(20, 25, 60, 0.7);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 40px auto;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .timer h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff7ae5;
+            font-size: 24px;
+        }
+        
+        .time-container {
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .time-unit {
+            text-align: center;
+        }
+        
+        .time-value {
+            font-size: 40px;
+            font-weight: bold;
+            color: #7a88ff;
+            text-shadow: 0 0 10px rgba(122, 136, 255, 0.5);
+        }
+        
+        .time-label {
+            font-size: 14px;
+            color: #b5b7ff;
+            margin-top: 5px;
+        }
+        
+        .star-map {
+            position: relative;
+            height: 500px;
+            margin: 50px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            background: rgba(10, 14, 41, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .star:hover {
+            transform: scale(1.5);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        
+        .memory-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .memory-content {
+            background: linear-gradient(135deg, #1a1f4d, #2a2f6d);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(122, 136, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #ff7ae5;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .memory-content h3 {
+            color: #ff7ae5;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .memory-content p {
+            color: #b5b7ff;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .memory-content .date {
+            color: #7a88ff;
+            font-style: italic;
+        }
+        
+        .quotes {
+            background: rgba(20, 25, 60, 0.7);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 50px auto;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .quotes h2 {
+            color: #ff7ae5;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .quote {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(30, 35, 70, 0.5);
+            border-left: 3px solid #7a88ff;
+        }
+        
+        .quote p {
+            color: #b5b7ff;
+            font-size: 18px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .quote .author {
+            color: #ff7ae5;
+            margin-top: 10px;
+            text-align: right;
+            font-size: 16px;
+        }
+        
+        .secret-section {
+            text-align: center;
+            padding: 50px 0;
+        }
+        
+        .secret-section h2 {
+            color: #ff7ae5;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        #password-input {
+            padding: 12px 20px;
+            background: rgba(30, 35, 70, 0.5);
+            border: 1px solid #7a88ff;
+            border-radius: 30px;
+            width: 300px;
+            margin-right: 10px;
+            font-size: 16px;
+            color: white;
+        }
+        
+        #submit-password {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #ff7ae5, #7a88ff);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s;
+        }
+        
+        #submit-password:hover {
+            transform: translateY(-2px);
+        }
+        
+        #secret-content {
+            display: none;
+            margin-top: 30px;
+            background: rgba(20, 25, 60, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        #secret-content h3 {
+            color: #ff7ae5;
+            margin-bottom: 15px;
+        }
+        
+        #secret-content p {
+            color: #b5b7ff;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #7a88ff;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .time-value {
+                font-size: 30px;
+            }
+            
+            .time-container {
+                flex-wrap: wrap;
+            }
+            
+            .time-unit {
+                width: 50%;
+                margin-bottom: 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+        
+        /* Анимации */
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+        
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+            animation: shoot 3s linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes shoot {
+            0% { 
+                transform: translateX(-100px) translateY(0);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateX(calc(100vw + 100px)) translateY(200px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Созвездие наших чувств</div>
+            <ul class="nav-links">
+                <li><a href="#star-map">Наше небо</a></li>
+                <li><a href="#memories">Воспоминания</a></li>
+                <li><a href="#quotes">Цитаты</a></li>
+                <li><a href="#secret">Секрет</a></li>
+            </ul>
+        </header>
+
+        <section class="hero">
+            <h1>Наша любовь как звездное небо</h1>
+            <p>Каждая звезда на этом небе - это precious момент, который мы пережили вместе. Наведи на звезду, чтобы узнать о нашем воспоминании.</p>
+            
+            <div class="timer">
+                <h2>Мы вместе уже:</h2>
+                <div class="time-container">
+                    <div class="time-unit">
+                        <div class="time-value" id="days">475</div>
+                        <div class="time-label">дней</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-value" id="hours">11400</div>
+                        <div class="time-label">часов</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-value" id="minutes">684000</div>
+                        <div class="time-label">минут</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-value" id="seconds">41040000</div>
+                        <div class="time-label">секунд</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="star-map" class="star-map">
+            <!-- Звезды будут добавлены через JavaScript -->
+        </section>
+
+        <section id="quotes" class="quotes">
+            <h2>Цитаты о любви</h2>
+            <div class="quote">
+                <p>Любовь — это не то, что мы испытываем, а то, что мы делаем.</p>
+                <div class="author">— М. Скотт Пек</div>
+            </div>
+            <div class="quote">
+                <p>Любить — значит находить в счастье другого свое собственное счастье.</p>
+                <div class="author">— Готфрид Вильгельм Лейбниц</div>
+            </div>
+            <div class="quote">
+                <p>Настоящая любовь похожа на привидение: все о ней говорят, но мало кто ее видел.</p>
+                <div class="author">— Франсуа де Ларошфуко</div>
+            </div>
+        </section>
+
+        <section id="secret" class="secret-section">
+            <h2>Секретное сообщение</h2>
+            <input type="password" id="password-input" placeholder="Введи наш особенный пароль">
+            <button id="submit-password">Открыть</button>
+            
+            <div id="secret-content">
+                <h3>Для самой прекрасной девушки во Вселенной!</h3>
+                <p>Ты - самая яркая звезда на моем небосводе. Каждый день с тобой наполнен светом и теплом, которые ты приносишь в мою жизнь.</p>
+                <p>Даже если у нас нет множества фотографий, у нас есть нечто большее - настоящие моменты, которые мы переживаем вместе, и чувства, которые связывают нас крепче любых снимков.</p>
+                <p>Я бесконечно благодарен судьбе за то, что ты в моей жизни. Люблю тебя больше, чем все звезды на небе!</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>Создано с любовью специально для тебя ❤️</p>
+        </footer>
+    </div>
+
+    <div class="memory-modal" id="memory-modal">
+        <div class="memory-content">
+            <button class="close-btn">&times;</button>
+            <h3 id="memory-title">Наша первая свидание</h3>
+            <p class="date" id="memory-date">28.06.2024</p>
+            <p id="memory-description">В наше первое свидание мы пошли в кино,я прекрасно помню тот день будто это было.</p>
+            <p После фильма мы гуляли и мы стеснялись от понимание того что мы встречаемся, я вообще скукурузил смущающее лицо тогда это было забавно.</p>
+        </div>
+    </div>
+
+    <script>
+        // Таймер отношений (замени дату на дату начала ваших отношений)
+        const startDate = new Date('2024-03-26').getTime();
+        
+        function updateTimer() {
+            const now = new Date().getTime();
+            const timeDiff = now - startDate;
+            
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+        
+        setInterval(updateTimer, 1000);
+        updateTimer();
+        
+        // Создание звездного неба с воспоминаниями
+        const starMap = document.getElementById('star-map');
+        const memories = [
+            { title: "Первая встреча", date: "29.03.2024", description: "Тот день, когда я впервые увидел тебя и понял, что хочу быть с тобой." },
+            { title: "Первое свидание", date: "28.06.2024", description: "Мы тогда сходили в кино и разговаривали обо всем на свете. Тогда я понял, как тебе легко со мной." },
+            { title: "Первый поцелуй", date: "05.09.2024", description: "Дело было в парке и мы тогда внезапно поцеловались. Это был самый волнующий момент в моей жизни." },
+            { title: "Наша первая ночевка", date: "18.01.2025", description: "Я впервые пришел к тебе с ночевкой и мы провели весь день вместе, смеясь и наслаждаясь обществом друг друга." },
+            { title: "Твой день рождения", date: "30.08.2025", description: "Я старался сделать этот день особенным для тебя. Твоя улыбка была лучшим подарком для меня." },
+            { title: "Разговор до ночи", date: "27.03.2024", description: "Мы просидели всю ночь, разговаривая о нашей любви друг другу и планах на будущее." },
+            { title: "Прогулка под дождем", date: "26.09.2024", description: "Мы промокли до нитки, но смеялись как дети. С тобой даже дождь становится приключением." }
+        ];
+        
+        // Создаем звезды для каждого воспоминания
+        memories.forEach((memory, index) => {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = `${10 + Math.random() * 10}px`;
+            star.style.height = star.style.width;
+            star.style.left = `${10 + Math.random() * 90}%`;
+            star.style.top = `${10 + Math.random() * 90}%`;
+            star.style.animation = `twinkle ${2 + Math.random() * 3}s infinite`;
+            star.style.animationDelay = `${Math.random() * 2}s`;
+            
+            // Сохраняем данные о воспоминании в элементе звезды
+            star.setAttribute('data-title', memory.title);
+            star.setAttribute('data-date', memory.date);
+            star.setAttribute('data-description', memory.description);
+            
+            star.addEventListener('click', function() {
+                const modal = document.getElementById('memory-modal');
+                document.getElementById('memory-title').textContent = this.getAttribute('data-title');
+                document.getElementById('memory-date').textContent = this.getAttribute('data-date');
+                document.getElementById('memory-description').textContent = this.getAttribute('data-description');
+                modal.style.display = 'flex';
+            });
+            
+            starMap.appendChild(star);
+        });
+        
+        // Добавляем падающие звезды
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.top = `${Math.random() * 50}%`;
+            shootingStar.style.width = `${50 + Math.random() * 100}px`;
+            shootingStar.style.animationDuration = `${2 + Math.random() * 3}s`;
+            document.body.appendChild(shootingStar);
+            
+            setTimeout(() => {
+                shootingStar.remove();
+            }, 5000);
+        }
+        
+        setInterval(createShootingStar, 3000);
+        
+        // Закрытие модального окна
+        document.querySelector('.close-btn').addEventListener('click', function() {
+            document.getElementById('memory-modal').style.display = 'none';
+        });
+        
+        // Секретное сообщение (замени пароль на свой)
+        document.getElementById('submit-password').addEventListener('click', function() {
+            const password = document.getElementById('password-input').value;
+            // Замени 'love' на реальный пароль, известный вам обоим
+            if (password === 'жаным') {
+                document.getElementById('secret-content').style.display = 'block';
+            } else {
+                alert('Неверный пароль! Попробуй еще раз :)');
+            }
+        });
+        
+        // Плавная прокрутка к разделам
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
